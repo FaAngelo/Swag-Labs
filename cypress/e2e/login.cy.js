@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
+// @ts-nocheck
 
 describe('Login' , ()=>{
-    // beforeEach(()=>{
-    //     cy.visit('/')
-    // })
+    beforeEach(()=>{
+        cy.visit('/')
+    })
     it('Página visível', ()=>{
         cy.title().should('eq' , 'Swag Labs')
         cy.get('#user-name').should('be.visible')
@@ -13,15 +14,11 @@ describe('Login' , ()=>{
         cy.get('.login_password').should('be.visible')
     })
     it('Login com usuario e senha válidos',()=>{
-        cy.get('#user-name').type('standard_user')
-        cy.get('#password').type('secret_sauce')
-        cy.get('#login-button').click()
+        cy.login('standard_user', 'secret_sauce')
         cy.url().should('be.equal','https://www.saucedemo.com/inventory.html')
     })
-    it('Login com usuario e senha inválidos',()=>{
-        cy.get('#user-name').type('testes')
-        cy.get('#password').type('teste123')
-        cy.get('#login-button').click()
+    it.only('Login com usuario e senha inválidos',()=>{
+        cy.login('teste', 'teste123')
         cy.get('.error-button').should('be.visible')
     })
     it('Login com usuario e senha vazios',()=>{
@@ -30,9 +27,7 @@ describe('Login' , ()=>{
     })
     it.only('Acesso ao sistema sem realizar login', () => {
         // Tenta acessar diretamente a página /inventory.html
-        cy.visit('https://www.saucedemo.com/inventory.html', {
-            failOnStatusCode: false
-        });
+        cy.visitUrl()
 
         // Verifica se a URL é redirecionada para a tela de login
         cy.url().should('include', '/');
